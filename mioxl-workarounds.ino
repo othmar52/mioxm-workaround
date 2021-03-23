@@ -67,6 +67,12 @@ void handleMidiEventAfterTouchPoly(byte inChannel, byte inNote, byte inValue) {
 }
 
 void handleMidiEventControlChange(byte inChannel, byte inControlNumber, byte inControlValue) {
+  // transform incoming MIDI CC 80 with value 127 on MIDI channel 6 to realtime start
+  if (inChannel == 6 && inControlNumber == 80 && inControlValue == 127) {
+    MIDI.sendStart();
+    // to not pass thru the incoming event
+    return;
+  }
   MIDI.sendControlChange(inControlNumber, inControlValue, inChannel);
 }
 
